@@ -7,6 +7,7 @@ import requests
 from flask import Flask, request
 
 app = Flask(__name__)
+check = Check()
 
 
 @app.route('/', methods=['GET'])
@@ -40,7 +41,11 @@ def webhook():
                     recipient_id = messaging_event["recipient"]["id"]  # the recipient's ID, which should be your page's facebook ID
                     message_text = messaging_event["message"]["text"]  # the message's text
 
-                    send_message(sender_id, "roger that!")
+                    check = process_data(message_text, check)
+                    if (check.is_Complete_Check()):
+                        #backendCall
+                        return
+                    send_message(sender_id, "please enter more information!")
 
                 if messaging_event.get("delivery"):  # delivery confirmation
                     pass
@@ -52,6 +57,24 @@ def webhook():
                     pass
 
     return "ok", 200
+
+    def process_data(data, check):
+        if (data == None):
+            return check
+        if (data[0:data.index(" ")].equals("name")):
+            check.set_user_name(data[data.index(" "):])
+
+        if (data[0:data.index(" ")].equals("email")):
+            check.set_recipient_email(data[data.index(" "):])
+
+        if (data[0:data.index(" ")].equals("name")):
+            check.set_check_amount(Integer(data[data.index(" "):]))
+
+
+        return check
+
+
+
 
 
 def send_message(recipient_id, message_text):
