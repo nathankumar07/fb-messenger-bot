@@ -19,3 +19,12 @@ class Check:
             return True
         else:
             return False
+
+    def get_user_name():
+        return self.user_name
+
+    def get_recipient_email():
+        return self.recipient_email
+
+    def get_check_amount():
+        return self.check_amount
